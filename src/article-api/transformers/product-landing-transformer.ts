@@ -1,21 +1,15 @@
-import type { Context, Page } from '@/types'
+import type { Context, Page, ResolvedArticle } from '@/types'
 import type { PageTransformer, TemplateData, Section, LinkGroup, LinkData } from './types'
 import { renderContent } from '@/content-render/index'
 import { loadTemplate } from '@/article-api/lib/load-template'
 import { resolvePath } from '@/article-api/lib/resolve-path'
 import { getLinkData } from '@/article-api/lib/get-link-data'
 
-interface RecommendedItem {
-  href: string
-  title?: string
-  intro?: string
-}
-
 interface ProductPage extends Omit<Page, 'featuredLinks'> {
   featuredLinks?: Record<string, Array<string | { href: string; title: string; intro?: string }>>
   children?: string[]
-  recommended?: RecommendedItem[]
-  rawRecommended?: string[]
+  carousels?: Record<string, ResolvedArticle[]>
+  rawCarousels?: Record<string, string[]>
   includedCategories?: string[]
 }
 
@@ -26,7 +20,7 @@ interface PageWithChildren extends Page {
 
 /**
  * Transforms product-landing pages into markdown format.
- * Handles featured links (startHere, popular, videos), guide cards,
+ * Handles featured links (startHere, popular), guide cards,
  * article grids with category filtering, and children listings.
  */
 export class ProductLandingTransformer implements PageTransformer {
@@ -59,49 +53,55 @@ export class ProductLandingTransformer implements PageTransformer {
     const languageCode = page.languageCode || 'en'
     const sections: Section[] = []
 
-    // Recommended carousel
-    const recommended = productPage.recommended ?? productPage.rawRecommended
-    if (recommended && recommended.length > 0) {
-      const { default: getLearningTrackLinkData } = await import(
-        '@/learning-track/lib/get-link-data'
-      )
+    // Process carousels (each carousel becomes a section)
+    const carousels = productPage.carousels ?? productPage.rawCarousels
+    if (carousels && typeof carousels === 'object') {
+      const { default: getPageLinkData } = await import('@/frame/lib/get-link-data')
 
-      let links: LinkData[]
-      if (typeof recommended[0] === 'object' && 'title' in recommended[0]) {
-        links = recommended.map((item) => ({
-          href: typeof item === 'string' ? item : item.href,
-          title: (typeof item === 'object' && item.title) || '',
-          intro: (typeof item === 'object' && item.intro) || '',
-        }))
-      } else {
-        const linkData = await getLearningTrackLinkData(recommended as string[], context, {
-          title: true,
-          intro: true,
-        })
-        links = (linkData || []).map((item: { href: string; title?: string; intro?: string }) => ({
-          href: item.href,
-          title: item.title || '',
-          intro: item.intro || '',
-        }))
-      }
+      for (const [carouselKey, articles] of Object.entries(carousels)) {
+        if (!Array.isArray(articles) || articles.length === 0) continue
 
-      const validLinks = links.filter((l) => l.href && l.title)
-      if (validLinks.length > 0) {
-        sections.push({
-          title: 'Recommended',
-          groups: [{ title: null, links: validLinks }],
-        })
+        let links: LinkData[]
+        if (typeof articles[0] === 'object' && 'title' in articles[0]) {
+          // Already resolved articles
+          links = articles.map((item) => ({
+            href: typeof item === 'string' ? item : item.href,
+            title: (typeof item === 'object' && item.title) || '',
+            intro: (typeof item === 'object' && item.intro) || '',
+          }))
+        } else {
+          // Raw paths that need resolution
+          const linkData = await getPageLinkData(articles as string[], context, {
+            title: true,
+            intro: true,
+          })
+          links = (linkData || []).map(
+            (item: { href: string; title?: string; intro?: string }) => ({
+              href: item.href,
+              title: item.title || '',
+              intro: item.intro || '',
+            }),
+          )
+        }
+
+        const validLinks = links.filter((l) => l.href && l.title)
+        if (validLinks.length > 0) {
+          // Use carousel key as title (capitalize first letter)
+          const sectionTitle = carouselKey.charAt(0).toUpperCase() + carouselKey.slice(1)
+          sections.push({
+            title: sectionTitle,
+            groups: [{ title: null, links: validLinks }],
+          })
+        }
       }
     }
 
-    // Featured links (startHere, popular, videos, etc.)
+    // Featured links (startHere, popular, etc.)
     const rawFeaturedLinks = productPage.featuredLinks
     if (rawFeaturedLinks) {
-      const { default: getLearningTrackLinkData } = await import(
-        '@/learning-track/lib/get-link-data'
-      )
+      const { default: getPageLinkData } = await import('@/frame/lib/get-link-data')
 
-      const featuredKeys = ['startHere', 'popular', 'videos']
+      const featuredKeys = ['startHere', 'popular']
       const featuredGroups: LinkGroup[] = []
 
       for (const key of featuredKeys) {
@@ -110,33 +110,17 @@ export class ProductLandingTransformer implements PageTransformer {
 
         const sectionTitle = this.getSectionTitle(key)
 
-        let resolvedLinks: LinkData[]
-
-        if (key === 'videos') {
-          // Videos are external URLs with title and href properties
-          const videoLinks = await Promise.all(
-            links.map(async (link) => {
-              if (typeof link === 'object' && link.href) {
-                const title = await renderContent(link.title, context, { textOnly: true })
-                return title ? { href: link.href, title, intro: link.intro || '' } : null
-              }
-              return null
-            }),
-          )
-          resolvedLinks = videoLinks.filter((l) => l !== null) as LinkData[]
-        } else {
-          // Other featuredLinks are page hrefs that need Liquid evaluation
-          const stringLinks = links.map((item) => (typeof item === 'string' ? item : item.href))
-          const linkData = await getLearningTrackLinkData(stringLinks, context, {
-            title: true,
-            intro: true,
-          })
-          resolvedLinks = (linkData || []).map((item) => ({
-            href: item.href,
-            title: item.title || '',
-            intro: item.intro || '',
-          }))
-        }
+        // featuredLinks are page hrefs that need Liquid evaluation
+        const stringLinks = links.map((item) => (typeof item === 'string' ? item : item.href))
+        const linkData = await getPageLinkData(stringLinks, context, {
+          title: true,
+          intro: true,
+        })
+        const resolvedLinks = (linkData || []).map((item) => ({
+          href: item.href,
+          title: item.title || '',
+          intro: item.intro || '',
+        }))
 
         const validLinks = resolvedLinks.filter((l) => l.href)
         if (validLinks.length > 0) {
@@ -290,7 +274,6 @@ export class ProductLandingTransformer implements PageTransformer {
       startHere: 'Start here',
       guideCards: 'Guides',
       popular: 'Popular',
-      videos: 'Videos',
     }
     return map[key] || key
   }

@@ -6,8 +6,6 @@ intro: 'Find out how {% data variables.product.prodname_copilot_short %} can sto
 product: '{% data reusables.gated-features.copilot-memory %}<br><a href="https://github.com/features/copilot/plans?ref_product=copilot&ref_type=engagement&ref_style=button&utm_source=docs-web-copilot-memory-concept&utm_medium=docs&utm_campaign=dec25postuniverse" target="_blank" class="btn btn-primary mt-3 mr-3 no-underline"><span>Sign up for {% data variables.product.prodname_copilot_short %}</span> {% octicon "link-external" height:16 %}</a>'
 versions:
   feature: copilot
-topics:
-  - Copilot
 contentType: concepts
 category:
   - Learn about Copilot
@@ -27,7 +25,7 @@ Memories are tightly scoped pieces of information about a repository, that are d
 * Repository-specific.
 * Only created in response to {% data variables.product.prodname_copilot_short %} activity initiated by users who have had {% data variables.copilot.copilot_memory %} enabled.
 
-Memories created by one part of {% data variables.product.prodname_copilot_short %} can be used by another part of {% data variables.product.prodname_copilot_short %}. So, for example, if {% data variables.copilot.copilot_coding_agent %} discovers how your repository handles database connections, {% data variables.copilot.copilot_code-review_short %} can later apply that knowledge to spot inconsistent patterns in a pull request it is reviewing. Similarly, if {% data variables.copilot.copilot_code-review_short %} learns about settings that must stay synchronized in two separate files, then {% data variables.copilot.copilot_coding_agent %} will know that if it alters the settings in one of those files it must update the other file accordingly.
+Memories created by one part of {% data variables.product.prodname_copilot_short %} can be used by another part of {% data variables.product.prodname_copilot_short %}. So, for example, if {% data variables.copilot.copilot_cloud_agent %} discovers how your repository handles database connections, {% data variables.copilot.copilot_code-review_short %} can later apply that knowledge to spot inconsistent patterns in a pull request it is reviewing. Similarly, if {% data variables.copilot.copilot_code-review_short %} learns about settings that must stay synchronized in two separate files, then {% data variables.copilot.copilot_cloud_agent %} will know that if it alters the settings in one of those files it must update the other file accordingly.
 
 ## Benefits of using {% data variables.copilot.copilot_memory %}
 
@@ -42,7 +40,7 @@ By building and maintaining a persistent, repository-level memory, {% data varia
 
 ## Where is {% data variables.copilot.copilot_memory %} used?
 
-Currently {% data variables.copilot.copilot_memory %} is used by {% data variables.copilot.copilot_coding_agent %} and {% data variables.copilot.copilot_code-review_short %} when these features are working on pull requests on the {% data variables.product.github %} website, and by {% data variables.copilot.copilot_cli_short %}. Memories are only created and used by {% data variables.product.prodname_copilot_short %} when {% data variables.copilot.copilot_memory %} has been enabled for the user initiating the {% data variables.product.prodname_copilot_short %} operation.
+Currently {% data variables.copilot.copilot_memory %} is used by {% data variables.copilot.copilot_cloud_agent %} and {% data variables.copilot.copilot_code-review_short %} when these features are working on pull requests on the {% data variables.product.github %} website, and by {% data variables.copilot.copilot_cli_short %}. Memories are only created and used by {% data variables.product.prodname_copilot_short %} when {% data variables.copilot.copilot_memory %} has been enabled for the user initiating the {% data variables.product.prodname_copilot_short %} operation.
 
 Agentic memory will be extended to other parts of {% data variables.product.prodname_copilot_short %}, and for personal and organizational scopes, in future releases.
 
@@ -62,12 +60,10 @@ If you are the owner of a repository where {% data variables.copilot.copilot_mem
 
 ## About enabling {% data variables.copilot.copilot_memory %}
 
-{% data variables.copilot.copilot_memory %} is turned off by default and can be enabled in the enterprise, organization, and personal settings.
-
 The ability to use {% data variables.copilot.copilot_memory %} is granted to users, rather than being enabled for repositories. After {% data variables.copilot.copilot_memory %} has been enabled for a user, {% data variables.product.prodname_copilot_short %} will be able to use agentic memory in any repository in which that person uses {% data variables.product.prodname_copilot %}.
 
-When enabled at the enterprise or organization level, {% data variables.copilot.copilot_memory %} will be available to all organization members who receive a {% data variables.product.prodname_copilot_short %} subscription from that organization.
+For users who have an individual {% data variables.product.prodname_copilot_short %} subscription to a {% data variables.copilot.copilot_pro_short %} or {% data variables.copilot.copilot_pro_plus_short %} plan, {% data variables.copilot.copilot_memory %} is enabled by default. These users can disable {% data variables.copilot.copilot_memory %} in their personal {% data variables.product.prodname_copilot_short %} settings on {% data variables.product.github %}.
 
-Users who have an individual {% data variables.product.prodname_copilot_short %} subscription, from a {% data variables.copilot.copilot_pro_short %} or {% data variables.copilot.copilot_pro_plus_short %} plan, must enable {% data variables.copilot.copilot_memory %} in their personal {% data variables.product.prodname_copilot_short %} settings on {% data variables.product.github %}.
+For enterprise and organization-managed {% data variables.product.prodname_copilot_short %} subscriptions, {% data variables.copilot.copilot_memory %} is turned off by default and can be enabled in the enterprise or organization settings. When enabled at the enterprise or organization level, {% data variables.copilot.copilot_memory %} will be available to all organization members who receive a {% data variables.product.prodname_copilot_short %} subscription from that organization.
 
 For more information, see [AUTOTITLE](/copilot/how-tos/use-copilot-agents/copilot-memory).

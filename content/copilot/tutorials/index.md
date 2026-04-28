@@ -1,17 +1,15 @@
 ---
-title: 'Tutorials for {% data variables.product.prodname_copilot %}'
+title: Tutorials for {% data variables.product.prodname_copilot %}
 shortTitle: Tutorials
-intro: 'Build skills and knowledge about {% data variables.product.prodname_copilot %} through examples and hands-on activities.'
+intro: Build skills and knowledge about {% data variables.product.prodname_copilot %} through examples and hands-on activities.
 versions:
   feature: copilot
-topics:
-  - Copilot
 children:
   - /copilot-chat-cookbook
   - /customization-library
-  - /coding-agent
+  - /cloud-agent
   - /spark
-  - /use-custom-instructions
+  - /customize-code-review
   - /enhance-agent-mode-with-mcp
   - /compare-ai-models
   - /speed-up-development-work
@@ -31,6 +29,7 @@ children:
   - /plan-a-project
   - /vibe-coding
   - /upgrade-projects
+  - /copilot-cli-hooks
 redirect_from:
   - /copilot/using-github-copilot/guides-on-using-github-copilot
 contentType: tutorials
@@ -39,10 +38,11 @@ layout: bespoke-landing
 sidebarLink:
   text: All tutorials
   href: /copilot/tutorials
-recommended:
-  - /copilot/tutorials/copilot-chat-cookbook
-  - /copilot/tutorials/customization-library
-  - /copilot/tutorials/roll-out-at-scale
+carousels:
+  recommended:
+    - /copilot/tutorials/copilot-chat-cookbook
+    - /copilot/tutorials/customization-library
+    - /copilot/tutorials/roll-out-at-scale
 includedCategories:
   - Accelerate PR velocity
   - Automate simple user stories
@@ -54,3 +54,4 @@ includedCategories:
   - Modernize applications
   - Roll Copilot out at scale
 ---
+

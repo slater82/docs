@@ -5,8 +5,6 @@ allowTitleToDifferFromFilename: true
 intro: 'Learn about the supported AI models in {% data variables.product.prodname_copilot %}.'
 versions:
   feature: copilot
-topics:
-  - Copilot
 category:
   - Learn about Copilot
 redirect_from:
@@ -37,8 +35,6 @@ For all of the default AI models, input prompts and output completions run throu
 
 This table lists the AI models available in {% data variables.product.prodname_copilot_short %}, along with their release status and availability in different modes.
 
-{% data reusables.copilot.grok-promo-period %}
-
 {% rowheaders %}
 
 | Model name                                             | Provider  | Release status             | Agent mode | Ask mode | Edit mode |
@@ -46,6 +42,20 @@ This table lists the AI models available in {% data variables.product.prodname_c
 | {% for model in tables.copilot.model-release-status %} |
 | {{ model.name }}                                       | {{ model.provider }} | {{ model.release_status }} | {% if model.agent_mode == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.ask_mode == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.edit_mode == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} |
 | {% endfor %}                                           |
+
+{% endrowheaders %}
+
+## Supported AI models in {% data variables.copilot.copilot_auto_model_selection_short_cap_a %}
+
+This table lists the supported AI models for {% data variables.copilot.copilot_auto_model_selection_short_cap_a %}. Available models may be limited by model policies, including policies restricting {% data variables.product.prodname_copilot_short %} to data-resident or FedRAMP-compliant models.
+
+{% rowheaders %}
+
+| Model | {% data variables.copilot.copilot_cloud_agent %} | {% data variables.copilot.copilot_chat_short %} | {% data variables.copilot.copilot_cli_short %} |
+| --- | --- | --- | --- |
+| {% for model in tables.copilot.auto-model-selection %} |
+| {{ model.name }} | {% if model.cloud_agent == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.chat == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.cli == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} |
+| {% endfor %} |
 
 {% endrowheaders %}
 
@@ -70,19 +80,14 @@ The following table shows which models are available in each client.
 > [!NOTE]
 > * {% data reusables.copilot.auto-model-selection %}
 > * {% data reusables.copilot.gpt-5-codex-vscode-support %}
-> * {% data variables.copilot.copilot_gpt_51_codex %} and {% data variables.copilot.copilot_gpt_51_codex_mini %} are supported in: 
->   * Visual Studio Code versions 1.104.1 or higher
->   * JetBrains, Copilot plugin versions 1.5.61 or higher
->   * Xcode, Copilot plugin versions 0.45.0 or later
->   * Eclipse, Copilot plugin versions 0.13.0 or later 
 
 {% rowheaders %}
 
-| Model | {% data variables.product.prodname_dotcom_the_website %} | {% data variables.product.prodname_vscode %} | {% data variables.product.prodname_vs %} | Eclipse | Xcode | JetBrains IDEs |
-|--------|-----------------------------------------------------------|-----------------------------------------------|-------------------------------------------|----------|--------|----------------|
+| Model | {% data variables.product.prodname_dotcom_the_website %} | {% data variables.copilot.copilot_cli_short %} | {% data variables.product.prodname_vscode %} | {% data variables.product.prodname_vs %} | Eclipse | Xcode | JetBrains IDEs |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 | {% for model in tables.copilot.model-supported-clients %} |
-| {{ model.name }}                                          | {% if model.dotcom == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.vscode == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.vs == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.eclipse == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.xcode == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.jetbrains == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} |
-| {% endfor %}                                              |
+| {{ model.name }} | {% if model.dotcom == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.cli == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.vscode == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.vs == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.eclipse == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.xcode == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} | {% if model.jetbrains == true %}{% octicon "check" aria-label="Included" %}{% else %}{% octicon "x" aria-label="Not included" %}{% endif %} |
+| {% endfor %} |
 
 {% endrowheaders %}
 
@@ -90,15 +95,45 @@ The following table shows which models are available in each client.
 
 The following table shows which AI models are available in each {% data variables.product.prodname_copilot_short %} plan. For more information about the plans, see [AUTOTITLE](/copilot/about-github-copilot/plans-for-github-copilot).
 
+{% data reusables.copilot.gpt-53-codex-student-model-picker-note %}
+
 {% data reusables.copilot.available-models-per-plan %}
 
 ## Model multipliers
+
+<!-- expires 2026-06-01 -->
+
+{% data reusables.copilot.ubb-announcement-cfi-cb-ce %}
+
+<!-- end expires 2026-06-01 -->
+
+> [!NOTE]
+> The multiplier for these models are subject to change.
+>
+> * {% data variables.copilot.copilot_claude_sonnet_46 %}
+> * {% data variables.copilot.copilot_gpt_54_mini %}
+
+{% data reusables.copilot.opus-47-promo-period %}
+
+{% data reusables.copilot.gpt-55-promo-period %}
 
 Each model has a premium request multiplier, based on its complexity and resource usage. If you are on a paid {% data variables.product.prodname_copilot_short %} plan, your premium request allowance is deducted according to this multiplier.
 
 For more information about premium requests, see [AUTOTITLE](/copilot/managing-copilot/monitoring-usage-and-entitlements/about-premium-requests).
 
 {% data reusables.copilot.model-multipliers %}
+
+## Fallback and long-term support (LTS) models
+
+For more information about fallback and LTS models, see [AUTOTITLE](/copilot/concepts/fallback-and-lts-models).
+
+## Evaluation models
+{% data variables.product.prodname_copilot %} offers access to evaluation models—including top-performing open source and open-weight models—to provide the most advanced coding suggestions available.
+
+> [!NOTE]
+> Testing of evaluation models has revealed that some may perform worse than other models on security-related or other categories of prompts. Customers are encouraged to validate code, including code security, using a range of models and thorough human review before incorporating suggestions into production.
+
+Evaluation models may be added, updated, or removed without notice. Availability and rate limits may differ from generally available models.
 
 ## Next steps
 

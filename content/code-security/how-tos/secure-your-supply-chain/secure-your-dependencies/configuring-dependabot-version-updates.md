@@ -12,14 +12,10 @@ versions:
   fpt: '*'
   ghec: '*'
   ghes: '*'
-topics:
-  - Dependabot
-  - Version updates
-  - Repositories
-  - Dependencies
-  - Pull requests
 shortTitle: Configure version updates
 contentType: how-tos
+category:
+  - Secure your dependencies
 ---
 <!--Marketing-LINK: From /features/security/software-supply-chain page "About version updates for dependencies".-->
 {% data reusables.dependabot.enterprise-enable-dependabot %}
@@ -51,7 +47,7 @@ You enable {% data variables.product.prodname_dependabot_version_updates %} by c
 
 1. Add a `version`. This key is mandatory. The file must start with `version: 2`.
 1. Optionally, if you have dependencies in a private registry, add a `registries` section containing authentication details. For more information, see [AUTOTITLE](/code-security/dependabot/working-with-dependabot/configuring-access-to-private-registries-for-dependabot).
-1. Add an `updates` section, with an entry for each package manager you want {% data variables.product.prodname_dependabot %} to monitor. This key is mandatory. You use it to configure how {% data variables.product.prodname_dependabot %} updates the versions or your project's dependencies. Each entry configures the update settings for a particular package manager. For more information, see [About the dependabot.yml file](/code-security/dependabot/working-with-dependabot/dependabot-options-reference#about-the-dependabotyml-file) in "{% data variables.product.prodname_dependabot %} options reference."
+1. Add an `updates` section, with an entry for each package manager you want {% data variables.product.prodname_dependabot %} to monitor. This key is mandatory. You use it to configure how {% data variables.product.prodname_dependabot %} updates the versions or your project's dependencies. Each entry configures the update settings for a particular package manager. For more information, see [AUTOTITLE](/code-security/concepts/supply-chain-security/about-the-dependabot-yml-file) and [AUTOTITLE](/code-security/dependabot/working-with-dependabot/dependabot-options-reference).
 1. For each package manager, use:
 
     * `package-ecosystem` to specify the package manager. For more information about the supported package managers, see [`package-ecosystem`](/code-security/dependabot/working-with-dependabot/dependabot-options-reference#package-ecosystem-).

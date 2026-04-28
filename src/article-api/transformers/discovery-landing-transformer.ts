@@ -1,20 +1,14 @@
-import type { Context, Page } from '@/types'
+import type { Context, Page, ResolvedArticle } from '@/types'
 import type { PageTransformer, TemplateData, Section, LinkData } from './types'
 import { renderContent } from '@/content-render/index'
 import { loadTemplate } from '@/article-api/lib/load-template'
 import { getAllTocItems, flattenTocItems } from '@/article-api/lib/get-all-toc-items'
 
-interface RecommendedItem {
-  href: string
-  title?: string
-  intro?: string
-}
-
 interface DiscoveryPage extends Page {
   rawIntroLinks?: Record<string, string>
   introLinks?: Record<string, string>
-  recommended?: RecommendedItem[]
-  rawRecommended?: string[]
+  carousels?: Record<string, ResolvedArticle[]>
+  rawCarousels?: Record<string, string[]>
   includedCategories?: string[]
   children?: string[]
 }
@@ -53,51 +47,57 @@ export class DiscoveryLandingTransformer implements PageTransformer {
     const discoveryPage = page as DiscoveryPage
     const sections: Section[] = []
 
-    // Recommended carousel
-    const recommended = discoveryPage.recommended ?? discoveryPage.rawRecommended
-    if (recommended && recommended.length > 0) {
-      const { default: getLearningTrackLinkData } = await import(
-        '@/learning-track/lib/get-link-data'
-      )
+    // Process carousels (each carousel becomes a section)
+    const carousels = discoveryPage.carousels ?? discoveryPage.rawCarousels
+    if (carousels && typeof carousels === 'object') {
+      const { default: getPageLinkData } = await import('@/frame/lib/get-link-data')
 
-      let links: LinkData[]
-      if (typeof recommended[0] === 'object' && 'title' in recommended[0]) {
-        links = recommended.map((item) => ({
-          href: typeof item === 'string' ? item : item.href,
-          title: (typeof item === 'object' && item.title) || '',
-          intro: (typeof item === 'object' && item.intro) || '',
-        }))
-      } else {
-        const linkData = await getLearningTrackLinkData(recommended as string[], context, {
-          title: true,
-          intro: true,
-        })
-        links = (linkData || []).map((item: { href: string; title?: string; intro?: string }) => ({
-          href: item.href,
-          title: item.title || '',
-          intro: item.intro || '',
-        }))
-      }
+      for (const [carouselKey, articles] of Object.entries(carousels)) {
+        if (!Array.isArray(articles) || articles.length === 0) continue
 
-      const validLinks = links.filter((l) => l.href && l.title)
-      if (validLinks.length > 0) {
-        sections.push({
-          title: 'Recommended',
-          groups: [{ title: null, links: validLinks }],
-        })
+        let links: LinkData[]
+        if (typeof articles[0] === 'object' && 'title' in articles[0]) {
+          // Already resolved articles
+          links = articles.map((item) => ({
+            href: typeof item === 'string' ? item : item.href,
+            title: (typeof item === 'object' && item.title) || '',
+            intro: (typeof item === 'object' && item.intro) || '',
+          }))
+        } else {
+          // Raw paths that need resolution
+          const linkData = await getPageLinkData(articles as string[], context, {
+            title: true,
+            intro: true,
+          })
+          links = (linkData || []).map(
+            (item: { href: string; title?: string; intro?: string }) => ({
+              href: item.href,
+              title: item.title || '',
+              intro: item.intro || '',
+            }),
+          )
+        }
+
+        const validLinks = links.filter((l) => l.href && l.title)
+        if (validLinks.length > 0) {
+          // Use carousel key as title (capitalize first letter)
+          const sectionTitle = carouselKey.charAt(0).toUpperCase() + carouselKey.slice(1)
+          sections.push({
+            title: sectionTitle,
+            groups: [{ title: null, links: validLinks }],
+          })
+        }
       }
     }
 
     // Intro links (getting started)
     const rawIntroLinks = discoveryPage.introLinks ?? discoveryPage.rawIntroLinks
     if (rawIntroLinks) {
-      const { default: getLearningTrackLinkData } = await import(
-        '@/learning-track/lib/get-link-data'
-      )
+      const { default: getPageLinkData } = await import('@/frame/lib/get-link-data')
       const links = await Promise.all(
         Object.values(rawIntroLinks).map(async (href): Promise<LinkData> => {
           if (typeof href === 'string') {
-            const linkData = await getLearningTrackLinkData(href, context)
+            const linkData = await getPageLinkData(href, context)
             if (Array.isArray(linkData) && linkData.length > 0) {
               const item = linkData[0]
               return { href: item.href || '', title: item.title || '', intro: item.intro || '' }
@@ -127,13 +127,12 @@ export class DiscoveryLandingTransformer implements PageTransformer {
       }
     }
 
-    // Articles section: recursively gather ALL descendant articles
-    // This matches the behavior of the site which uses genericTocFlat/genericTocNested
+    // Articles section: recursively gather descendant articles within
+    // this product section. The basePath guard prevents cross-product
+    // recursion (e.g. /rest listing /enterprise-admin children that
+    // point outside the /rest hierarchy).
     if (discoveryPage.children && discoveryPage.children.length > 0) {
-      const tocItems = await getAllTocItems(page, context, {
-        recurse: true,
-        renderIntros: true,
-      })
+      const tocItems = await getAllTocItems(page, context)
 
       // Flatten to get all leaf articles (excludeParents: true means only get articles, not category pages)
       let allArticles = flattenTocItems(tocItems, { excludeParents: true })
@@ -141,21 +140,31 @@ export class DiscoveryLandingTransformer implements PageTransformer {
       // Apply includedCategories filter if specified
       if (discoveryPage.includedCategories && discoveryPage.includedCategories.length > 0) {
         const includedCategories = discoveryPage.includedCategories.map((c) => c.toLowerCase())
-        // Filter tocItems before flattening to preserve category info
-        const filterByCategory = (items: typeof tocItems): typeof tocItems => {
-          return items.filter((item) => {
-            const itemCategories = (item.category || []).map((c: string) => c.toLowerCase())
-            return itemCategories.some((cat) => includedCategories.includes(cat))
-          })
-        }
 
-        // Re-flatten with category filtering
-        const filteredTocItems = filterByCategory(flattenTocItemsWithCategory(tocItems))
-        allArticles = filteredTocItems.map((item) => ({
-          href: item.href,
-          title: item.title,
-          intro: item.intro,
-        }))
+        // Build a map of href → category from the full tree
+        const categoryMap = new Map<string, string[]>()
+        interface TocNode {
+          href: string
+          category?: string[]
+          childTocItems?: TocNode[]
+        }
+        function collectCategories(items: TocNode[]) {
+          for (const item of items) {
+            if (item.category && item.category.length > 0) {
+              categoryMap.set(item.href, item.category)
+            }
+            if (item.childTocItems) collectCategories(item.childTocItems)
+          }
+        }
+        collectCategories(tocItems)
+
+        allArticles = allArticles.filter((item) => {
+          const itemCategories = (categoryMap.get(item.href) || []).map((c) => c.toLowerCase())
+          return (
+            itemCategories.length === 0 ||
+            itemCategories.some((cat) => includedCategories.includes(cat))
+          )
+        })
       }
 
       if (allArticles.length > 0) {
@@ -175,37 +184,4 @@ export class DiscoveryLandingTransformer implements PageTransformer {
       sections,
     }
   }
-}
-
-/**
- * Helper to flatten TOC items while preserving category info for filtering
- */
-interface TocItemWithCategory {
-  href: string
-  title: string
-  intro?: string
-  category?: string[]
-  childTocItems?: TocItemWithCategory[]
-}
-
-function flattenTocItemsWithCategory(tocItems: TocItemWithCategory[]): TocItemWithCategory[] {
-  const result: TocItemWithCategory[] = []
-
-  function recurse(items: TocItemWithCategory[]) {
-    for (const item of items) {
-      const hasChildren = item.childTocItems && item.childTocItems.length > 0
-
-      // Only include leaf nodes (articles, not category pages)
-      if (!hasChildren) {
-        result.push(item)
-      }
-
-      if (hasChildren) {
-        recurse(item.childTocItems!)
-      }
-    }
-  }
-
-  recurse(tocItems)
-  return result
 }

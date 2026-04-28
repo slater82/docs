@@ -9,9 +9,6 @@ versions:
   fpt: '*'
   ghes: '*'
   ghec: '*'
-topics:
-  - Organizations
-  - Teams
 children:
   - /verifying-or-approving-a-domain-for-your-organization
   - /renaming-an-organization
@@ -43,6 +40,7 @@ children:
   - /managing-the-display-of-member-names-in-your-organization
   - /managing-updates-from-accounts-your-organization-sponsors
   - /managing-the-publication-of-github-pages-sites-for-your-organization
+  - /managing-commit-comments-for-your-organization
   - /archiving-an-organization
   - /deleting-an-organization-account
   - /converting-an-organization-into-a-user

@@ -33,23 +33,33 @@ git submodule  | `gitsubmodule`   | Not applicable | {% octicon "check" aria-lab
 Go modules     | `gomod`          | v1               | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} |
 [Gradle](#gradle)         | `gradle`         | Not applicable   | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
 [Maven](#maven)       | `maven`          | Not applicable   | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| {% ifversion dependabot-nix-support %} |
+[Nix](#nix)    | `nix`         | Not applicable               | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "x" aria-label="Not supported" %} | Not applicable | Not applicable |
+| {% endif %} |
 npm            | `npm`            | v7, v8, v9, v10, v11   | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
 [NuGet](#nuget-cli)          | `nuget`          | {% ifversion fpt or ghec or ghes > 3.14 %}<=6.12.0{% endif %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
 | {% ifversion dependabot-opentofu-support %} |
 [OpenTofu](#opentofu)    | `opentofu`      | Not applicable  | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | Not applicable |
 | {% endif %} |
-[pip](#pip-and-pip-compile) | `pip`            | v21.1.2          | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
-pipenv         | `pip`            | <= 2021-05-29    | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
-[pip-compile](#pip-and-pip-compile) | `pip`            | 6.1.0            | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+[pip](#pip-and-pip-compile) | `pip` | 24.2        | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+pipenv                      | `pip` | 2024.4.1 | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+[pip-compile](#pip-and-pip-compile) | `pip`            | 7.5.3            | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
 | {% ifversion dependabot-updates-pnpmv9-support %}pnpm{% else %}[pnpm](#pnpm){% endif %}   | `npm`            | v7, v8, v9, v10      | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} {% ifversion dependabot-updates-pnpmv9-support %}{% else %}(v7 and v8 only){% endif %}| {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
-poetry         | `pip`            | v1               | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+[poetry](#poetry)           | `pip` | v2       | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| {% ifversion dependabot-pre-commit-support %} |
+[pre-commit](#pre-commit) | `pre-commit` | Not applicable | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| {% endif %} |
 [pub](#pub)           | `pub`            | v2  | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
 | {% ifversion dependabot-rust-toolchain-support %} |
 [Rust toolchain](#rust-toolchain) | `rust-toolchain` | Not applicable | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | Not applicable   | Not applicable   |
 | {% endif %} |
 [Swift](#swift)      | `swift`      | v5  | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} (git only) | {% octicon "x" aria-label="Not supported" %} |
 [Terraform](#terraform)      | `terraform`      | >= 0.13, <= 1.13.x  | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | Not applicable |
+| {% ifversion dependabot-uv-security-support %} |
 uv        | `uv`            | v0               | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | Not applicable |
+| {% elsif dependabot-uv-support %} |
+uv        | `uv`            | v0               | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} | Not applicable |
+| {% endif %} |
 | {% ifversion dependabot-vcpkg-support %} |
 [vcpkg](#vcpkg) | `vcpkg`          | Not applicable   | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} | Not applicable |
 | {% endif %} |
@@ -120,17 +130,26 @@ For more information about using {% data variables.product.prodname_dependabot_v
 
 ### Gradle
 
-{% data variables.product.prodname_dependabot %} doesn't run Gradle but supports updates to the following files:
+{% data variables.product.prodname_dependabot %} supports updates to the following files without needing to run Gradle:
+
 * `build.gradle`, `build.gradle.kts` (for Kotlin projects)
 * `gradle/libs.versions.toml` (for projects using a standard Gradle version catalog)
 * `gradle.lockfile` (for projects using Gradle dependency locking)
 * Files included via the `apply` declaration that have `dependencies` in the filename. Note that `apply` does not support `apply to`, recursion, or advanced syntaxes (for example, Kotlin's `apply` with `mapOf`, filenames defined by property).
+
+To update the Gradle Wrapper, {% data variables.product.prodname_dependabot %} runs Gradle and updates:
+
+* `gradle/wrapper/gradle-wrapper.properties`
+* `gradlew`
+* `gradlew.bat`
+* `gradle/wrapper/gradle-wrapper.jar`
 
 {% data variables.product.prodname_dependabot %} uses information from the `pom.xml` file of dependencies to add links to release information in update pull requests. If the information is omitted from the `pom.xml` file, then it cannot be included in {% data variables.product.prodname_dependabot %} pull requests, see [AUTOTITLE](/code-security/dependabot/ecosystems-supported-by-dependabot/optimizing-java-packages-dependabot).
 
 For {% data variables.product.prodname_dependabot_security_updates %}, Gradle support is limited to manual uploads of the dependency graph data using the {% data variables.dependency-submission-api.name %}. For more information about the {% data variables.dependency-submission-api.name %}, see [AUTOTITLE](/code-security/supply-chain-security/understanding-your-software-supply-chain/using-the-dependency-submission-api).
 
 > [!NOTE]
+>
 > * When you upload Gradle dependencies to the dependency graph using the {% data variables.dependency-submission-api.name %}, all project dependencies are uploaded, even transitive dependencies that aren't explicitly mentioned in any dependency file. When an alert is detected in a transitive dependency, {% data variables.product.prodname_dependabot %} isn't able to find the vulnerable dependency in the repository, and therefore won't create a security update for that alert.
 > * {% data variables.product.prodname_dependabot_version_updates %} will, however, create pull requests when the parent dependency is explicitly declared as a direct dependency in the project's manifest file.
 
@@ -147,6 +166,16 @@ When configuring {% data variables.product.prodname_dependabot %} for Helm chart
 {% data variables.product.prodname_dependabot %} doesn't run Maven but supports updates to `pom.xml` files.
 
 {% data variables.product.prodname_dependabot %} uses information from the `pom.xml` file of dependencies to add links to release information in update pull requests. If the information is omitted from the `pom.xml` file, then it cannot be included in {% data variables.product.prodname_dependabot %} pull requests, see [AUTOTITLE](/code-security/dependabot/ecosystems-supported-by-dependabot/optimizing-java-packages-dependabot).
+
+{% ifversion dependabot-nix-support %}
+
+### Nix
+
+{% data variables.product.prodname_dependabot %} monitors your `flake.lock` file and opens pull requests when newer commits are available upstream for your flake inputs. {% data variables.product.github %}, GitLab, SourceHut, and plain Git inputs are all supported. Updating pinned refs inside `flake.nix` itself (for example, changing `github:cachix/devenv/v0.5` to a newer tag) is not supported.
+
+{% data variables.product.prodname_dependabot %} does not currently support private repositories for the `nix` ecosystem.
+
+{% endif %}
 
 ### NuGet CLI
 
@@ -169,7 +198,31 @@ pnpm is supported for {% data variables.product.prodname_dependabot_version_upda
 
 ### poetry
 
-The PEP 621 `project` section isn't currently supported for `poetry`.
+{% data variables.product.prodname_dependabot %} supports Poetry v2.{% ifversion dependabot-poetry-pep621 %}{% else %} The PEP 621 `project` section isn't currently supported for `poetry`.{% endif %}
+
+{% ifversion dependabot-pre-commit-support %}
+
+### pre-commit
+
+{% data variables.product.prodname_dependabot %} can update hook revisions in `.pre-commit-config.yaml` files. When a hook pins a specific commit SHA, {% data variables.product.prodname_dependabot %} resolves the latest matching tag and updates the `rev` value accordingly.
+
+You can use a `# frozen:` comment after the `rev` value to pin a hook to a particular version or version prefix. {% data variables.product.prodname_dependabot %} uses this comment to determine whether an update is needed and which tag to resolve.
+
+| Scenario | Behavior |
+|---|---|
+| `rev: <sha>  # frozen: 7.3.0` and 7.3.0 is the latest version | No update. The dependency is already current. |
+| `rev: <sha>  # frozen: 7.3.0` and 8.0.0 has been released | Updated to the SHA for the `8.0.0` tag. The comment is updated to `# frozen: 8.0.0`. |
+| `rev: <sha>  # frozen: v1` and `v1.43.5` is the latest `v1.x` release | Updated to the SHA for the `v1.43.5` tag. The comment is updated to `# frozen: v1.43.5`. |
+| `rev: <sha>` with no `# frozen:` comment | Updated to the HEAD SHA of the default branch. |
+
+In addition to updating hook revisions, {% data variables.product.prodname_dependabot %} can update `additional_dependencies` for hooks that use the following languages: Python, Node, Go, Rust, Ruby and Dart.
+
+Private registry support uses git registries. You can configure access for private git repositories by specifying a git registry in your `dependabot.yml` file. For more information, see [AUTOTITLE](/code-security/dependabot/working-with-dependabot/configuring-access-to-private-registries-for-dependabot#git).
+
+> [!NOTE]
+> Private registries are not supported for `additional_dependencies`.
+
+{% endif %}
 
 {% ifversion dependabot-rust-toolchain-support %}
 
@@ -191,6 +244,7 @@ Private registry support applies to git registries only. Swift registries are no
 ### Terraform
 
 Terraform support includes:
+
 * Modules hosted on Terraform Registry or a publicly reachable Git repository.
 * Terraform providers.
 * Private Terraform Registry. You can configure access for private git repositories by specifying a git registry in your `dependabot.yml` file. For more information, see [`git`](/code-security/dependabot/working-with-dependabot/configuring-access-to-private-registries-for-dependabot#git).

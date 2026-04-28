@@ -8,6 +8,8 @@ versions:
   ghes: '*'
 redirect_from:
   - /contributing/syntax-and-versioning-for-github-docs/using-yaml-frontmatter
+category:
+  - Write and format content
 ---
 
 ## About YAML frontmatter
@@ -37,11 +39,9 @@ For more information, see [`lib/frontmatter.ts`](https://github.com/github/docs/
 * [`changelog`](#changelog)
 * [`defaultPlatform`](#defaultplatform)
 * [`defaultTool`](#defaulttool)
-* [`learningTracks`](#learningtracks)
-* [`includeGuides`](#includeguides)
+
 * [`journeyTracks`](#journeytracks)
 * [`type`](#type)
-* [`topics`](#topics)
 * [`communityRedirect`](#communityredirect)
 * [`effectiveDate`](#effectivedate)
 
@@ -225,30 +225,6 @@ defaultPlatform: linux
 defaultTool: cli
 ```
 
-### `learningTracks`
-
-* Purpose: Render a list of learning tracks on a product's sub-landing page.
-* Type: `String`. This should reference learning tracks' names defined in [`data/learning-tracks/*.yml`](https://github.com/github/docs/tree/main/data/learning-tracks).
-* Optional
-
-> [!NOTE]
-> The featured track is set by a specific property in the learning tracks YAML. See that [README](https://github.com/github/docs/blob/main/data/learning-tracks/README.md) for details.
-
-### `includeGuides`
-
-* Purpose: Render a list of articles, filterable by `type` and `topics`. Only applicable when used with `layout: product-guides`.
-* Type: `Array`
-* Optional.
-
-Example:
-
-```yaml
-includeGuides:
-  - /actions/guides/about-continuous-integration
-  - /actions/guides/setting-up-continuous-integration-using-workflow-templates
-  - /actions/guides/building-and-testing-nodejs
-  - /actions/guides/building-and-testing-powershell
-```
 
 ### `journeyTracks`
 
@@ -288,12 +264,6 @@ journeyTracks:
 * Purpose: Indicate the type of article.
 * Type: `String`, one of the `overview`, `quick_start`, `tutorial`, `how_to`, `reference`, `rai`.
 * Optional.
-
-### `topics`
-
-* Purpose: Indicate the topics covered by the article. Refer to the content models for more details about adding topics. A full list of existing topics is located in the [allowed topics file](https://github.com/github/docs/blob/main/data/allowed-topics.ts). If topics in article frontmatter and the allow-topics list become out of sync, the [topics CI test](https://github.com/github/docs/blob/main/src/search/tests/topics.ts) will fail.
-* Type: Array of `String`s
-* Optional: Topics are preferred for each article, but, there may be cases where existing articles don't yet have topics, or adding a topic to a new article may not add value.
 
 ### `communityRedirect`
 
@@ -343,13 +313,3 @@ The homepage is the main Table of Contents file for the docs site. The homepage 
 
 `childGroups` is an array of mappings containing a `name` for the group, an optional `icon` for the group, and an array of `children`. The `children` in the array must be present in the `children` frontmatter property.
 
-## Creating new product guides pages
-
-To create a product guides page (e.g. [{% data variables.product.prodname_actions %} Guide page](/actions/guides)), create or modify an existing markdown file with these specific frontmatter values:
-
-* Use the product guides page template by referencing `layout: product-guides`.
-* Include the learning tracks in [`learningTracks`](#learningtracks). Optional.
-* Define which articles to include with [`includeGuides`](#includeguides). Optional.
-
-If using learning tracks, they need to be defined in [`data/learning-tracks/*.yml`](https://github.com/github/docs/tree/main/data/learning-tracks).
-If using `includeGuides`, make sure each of the articles in this list has [`topics`](#topics) and [`type`](#type) in its frontmatter.
